@@ -63,7 +63,7 @@ const refreshData = async () => {
     htmlContent += currentDate;
     htmlContent += nextThreeDates;
 
-    const totalHtml = `<tr><th>Total</th><th>${totalSoldCount}</th></tr>`;
+    const totalHtml = `<tr><th>Total</th><th>${totalSoldCount}/2349 (${totalSoldCount / 2349 * 100}% of full run)</th></tr>`;
     htmlContent += totalHtml;
     htmlContent += '</table></body></html>';
 
