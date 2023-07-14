@@ -34,17 +34,30 @@ const refreshData = async () => {
     const currentTime = new Date();
     const formattedTime = currentTime.toLocaleString('en-GB', { timeZone: 'Europe/London' }); // Format time as per your preference
     let htmlContent = `<html><body><p>Last refreshed: ${formattedTime}</p><table>`;
+    let currentDate = '<h1>Today</h1>';
+    let nextThreeDates = '<h3>Next three shows</h3>';
 
     rows.forEach(row => {
       const date = new Date(row[6]);
       const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
       const soldCountInclCA = parseInt(row[14]);
 
+      if (formattedDate === 'Aug 2, 2023') {
+        currentDate += `<h2>${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h2>`;
+      };
+
+      if (formattedDate === 'Aug 3, 2023' || formattedDate === 'Aug 4, 2023' || formattedDate === 'Aug 5, 2023') {
+        nextThreeDates += `<h4>${formattedDate}: ${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h4>`
+      };
+
       totalSoldCount += soldCountInclCA;
 
       const rowHtml = `<tr><td>${formattedDate}</td><td>${soldCountInclCA}</td></tr>`;
-      htmlContent += rowHtml;
+      // htmlContent += rowHtml;
     });
+
+    htmlContent += currentDate;
+    htmlContent += nextThreeDates;
 
     const totalHtml = `<tr><th>Total</th><th>${totalSoldCount}</th></tr>`;
     htmlContent += totalHtml;
