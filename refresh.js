@@ -33,9 +33,13 @@ const refreshData = async () => {
 
     const currentTime = new Date();
     const formattedTime = currentTime.toLocaleString('en-GB', { timeZone: 'Europe/London' }); // Format time as per your preference
-    let htmlContent = `<html><body><p>Last refreshed: ${formattedTime}</p><table>`;
-    let currentDate = '<h1>Today</h1>';
-    let nextThreeDates = '<h3>Next three shows</h3>';
+    let htmlContent = `<html>
+    <head>
+    <link rel="stylesheet" href="/output.css">
+    </head>
+    <body class="text-2xl"><p>Last refreshed: ${formattedTime}</p><table>`;
+    let currentDate = `<h1 class="text-2xl">Today</h1>`;
+    let nextThreeDates = `<h3 class="text-2xl">Next three shows</h3>`;
 
     rows.forEach(row => {
       const date = new Date(row[6]);

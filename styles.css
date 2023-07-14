@@ -1,0 +1,35 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Set the font family to sans-serif */
+html, body {
+  font-family: sans-serif;
+}
+
+/* Define responsive font sizes based on viewport width */
+.text-xs {
+  font-size: 0.75rem; /* Adjust the values as per your preference */
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+}
+
+/* Add more font size classes as needed */

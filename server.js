@@ -16,9 +16,9 @@ fastify.get('/', function (req, reply) {
   return reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'index.html') directly
 })
 
-fastify.get('/:stuff', function (req, reply) {
-  return '<html><body><h1>Hello there ${req.params.stuff}!</h1></body></html>';
-})
+// fastify.get('/:stuff', function (req, reply) {
+//   return '<html><body><h1>Hello there ${req.params.stuff}!</h1></body></html>';
+// })
 
 fastify.get('/refresh', async (req, reply) => {
   refreshData();
