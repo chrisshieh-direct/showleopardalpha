@@ -5,6 +5,8 @@
 /* Set the font family to sans-serif */
 html, body {
   font-family: sans-serif;
+  margin: 1rem;
+  padding: 0.5rem;
 }
 
 /* Define responsive font sizes based on viewport width */
@@ -29,7 +31,7 @@ html, body {
 }
 
 .text-2xl {
-  font-size: 1.5rem;
+  font-size: 3rem;
 }
 
 /* Add more font size classes as needed */
