@@ -29,27 +29,17 @@ const refreshData = async () => {
     });
 
     const rows = data.slice(1); // Remove header row
-    let totalSoldCount = 0;
 
-    const currentTime = new Date();
-    const formattedTime = currentTime.toLocaleString('en-GB', { timeZone: 'Europe/London' }); // Format time as per your preference
-    let htmlContent = `<html>
-    <head>
-    <link rel="stylesheet" href="/output.css">
-    </head>
-    <body class="text-2xl"><p>Last refreshed: ${formattedTime}</p><table>`;
-
-    // Get today's date and the next three days
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0); // Reset hours, minutes, seconds, and milliseconds
+    currentDate.setHours(0, 0, 0, 0);
     const nextThreeDates = [
       new Date(currentDate.getTime() + 24 * 60 * 60 * 1000),
       new Date(currentDate.getTime() + 2 * 24 * 60 * 60 * 1000),
       new Date(currentDate.getTime() + 3 * 24 * 60 * 60 * 1000)
     ];
 
-    let todayOutput = `<h1 class="text-2xl">Today</h1>`;
-    let nextThreeOutput = `<h3 class="text-2xl">Next three shows</h3>`;
+    let ticketsSoldByDate = {};  // Stores tickets sold for each date
+    let totalSoldCount = 0;
 
     rows.forEach(row => {
       const date = new Date(row[6]);
@@ -57,18 +47,37 @@ const refreshData = async () => {
       const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
       const soldCountInclCA = parseInt(row[14]);
 
-      if (date.getTime() === currentDate.getTime()) {
-        todayOutput += `<h2>${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h2>`;
+      if (!ticketsSoldByDate[formattedDate]) {
+        ticketsSoldByDate[formattedDate] = 0;
       }
-
-      for (const nextDate of nextThreeDates) {
-        if (date.getTime() === nextDate.getTime()) {
-          nextThreeOutput += `<h4>${formattedDate}: ${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h4>`;
-        }
-      }
+      ticketsSoldByDate[formattedDate] += soldCountInclCA;
 
       totalSoldCount += soldCountInclCA;
     });
+
+    let todayOutput = `<h1 class="text-2xl">Today</h1>`;
+    const formattedCurrentDate = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    if (ticketsSoldByDate[formattedCurrentDate]) {
+      todayOutput += `<h2>${ticketsSoldByDate[formattedCurrentDate]} sold (${87 - ticketsSoldByDate[formattedCurrentDate]} remaining)</h2>`;
+    }
+
+    let nextThreeOutput = `<h3 class="text-2xl">Next three shows</h3>`;
+    for (const nextDate of nextThreeDates) {
+      const formattedNextDate = nextDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+      if (ticketsSoldByDate[formattedNextDate]) {
+        nextThreeOutput += `<h4>${formattedNextDate}: ${ticketsSoldByDate[formattedNextDate]} sold (${87 - ticketsSoldByDate[formattedNextDate]} remaining)</h4>`;
+      }
+    }
+
+    const formattedTime = new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' });
+    let htmlContent = `
+      <html>
+        <head>
+          <link rel="stylesheet" href="/output.css">
+        </head>
+        <body class="text-2xl">
+          <p>Last refreshed: ${formattedTime}</p><table>
+    `;
 
     htmlContent += todayOutput;
     htmlContent += nextThreeOutput;

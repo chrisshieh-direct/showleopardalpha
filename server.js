@@ -3,7 +3,7 @@ const fastify = require('fastify')({
 })
 
 const cron = require ('node-cron');
-const refreshData = require('./refresh');
+const refreshDataAugust = require('./refresh');
 
 const path = require('path');
 
@@ -21,7 +21,7 @@ fastify.get('/', function (req, reply) {
 // })
 
 fastify.get('/refresh', async (req, reply) => {
-  refreshData();
+  refreshDataAugust();
   reply.send({ status: 'Data refresh initiated' });
 });
 
