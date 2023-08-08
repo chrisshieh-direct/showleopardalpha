@@ -38,30 +38,40 @@ const refreshData = async () => {
     <link rel="stylesheet" href="/output.css">
     </head>
     <body class="text-2xl"><p>Last refreshed: ${formattedTime}</p><table>`;
-    let currentDate = `<h1 class="text-2xl">Today</h1>`;
-    let nextThreeDates = `<h3 class="text-2xl">Next three shows</h3>`;
+
+    // Get today's date and the next three days
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0); // Reset hours, minutes, seconds, and milliseconds
+    const nextThreeDates = [
+      new Date(currentDate.getTime() + 24 * 60 * 60 * 1000),
+      new Date(currentDate.getTime() + 2 * 24 * 60 * 60 * 1000),
+      new Date(currentDate.getTime() + 3 * 24 * 60 * 60 * 1000)
+    ];
+
+    let todayOutput = `<h1 class="text-2xl">Today</h1>`;
+    let nextThreeOutput = `<h3 class="text-2xl">Next three shows</h3>`;
 
     rows.forEach(row => {
       const date = new Date(row[6]);
+      date.setHours(0, 0, 0, 0);
       const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
       const soldCountInclCA = parseInt(row[14]);
 
-      if (formattedDate === 'Aug 2, 2023') {
-        currentDate += `<h2>${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h2>`;
-      };
+      if (date.getTime() === currentDate.getTime()) {
+        todayOutput += `<h2>${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h2>`;
+      }
 
-      if (formattedDate === 'Aug 3, 2023' || formattedDate === 'Aug 4, 2023' || formattedDate === 'Aug 5, 2023') {
-        nextThreeDates += `<h4>${formattedDate}: ${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h4>`
-      };
+      for (const nextDate of nextThreeDates) {
+        if (date.getTime() === nextDate.getTime()) {
+          nextThreeOutput += `<h4>${formattedDate}: ${soldCountInclCA} sold (${87 - soldCountInclCA} remaining)</h4>`;
+        }
+      }
 
       totalSoldCount += soldCountInclCA;
-
-      const rowHtml = `<tr><td>${formattedDate}</td><td>${soldCountInclCA}</td></tr>`;
-      // htmlContent += rowHtml;
     });
 
-    htmlContent += currentDate;
-    htmlContent += nextThreeDates;
+    htmlContent += todayOutput;
+    htmlContent += nextThreeOutput;
 
     const totalHtml = `<tr><th class="text-2xl red">Total: ${totalSoldCount}/2349 (${(totalSoldCount / 2349 * 100).toFixed(2)}% of full run)</th></tr>`;
     htmlContent += totalHtml;
